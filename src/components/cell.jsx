@@ -6,10 +6,10 @@ class Cell extends Component {
   }
 
   render() {
-    const { id } = this.props;
+    const { details } = this.props;
     return (
       <div>
-        <p>{`${id}`}</p>
+        <p>{`${details.id}`}</p>
       </div>
     );
   }
