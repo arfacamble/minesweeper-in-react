@@ -19,8 +19,9 @@ class Grid extends Component {
         display: 'grid',
         gridTemplateColumns: `repeat(${col}, 30px)`,
         gridTemplateRows: `repeat(${row}, 30px)`
-      }}>
-        {cells.map(cell => <Cell details={cell} key={cell.id}/>)}
+      }}
+      >
+        {cells.map(cell => <Cell details={cell} key={cell.id} />)}
       </div>
     );
   }
