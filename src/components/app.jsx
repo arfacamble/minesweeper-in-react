@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Grid from './grid';
+import { surroundingIDs } from '../logic/add-type-to-grid';
 
 class App extends Component {
   constructor(props) {
@@ -78,11 +79,33 @@ class App extends Component {
     };
   }
 
+  uncoverCell = (cellId) => {
+    const { cells } = this.state;
+    const cellToUncover = cells.find(cell => cell.id === cellId);
+    if (cellToUncover === undefined || cellToUncover.display !== 'unopened.svg') {
+      return null;
+    }
+    const indexOfCell = cells.indexOf(cellToUncover);
+    cellToUncover.display = cellToUncover.type;
+    cells.indexOfCell = cellToUncover;
+    this.setState({ cells });
+    if (cellToUncover.mine) {
+      const allRemainingMines = cells.filter(cell => cell.mine && cell.display === 'unopened.svg');
+      allRemainingMines.forEach(mine => this.uncoverCell(mine.id));
+      if (allRemainingMines.length === 0) { alert('FAIL'); }
+    } else if (cellToUncover.type === '0.svg') {
+      surroundingIDs(cellId).forEach(id => this.uncoverCell(id));
+    }
+    if (cells.every(cell => cell.mine || cell.display !== 'unopened.svg')) {
+      alert('SUCCESS');
+    }
+  }
+
   render() {
     const { col, row, cells } = this.state;
     return (
       <div>
-        <Grid col={col} row={row} cells={cells} />
+        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} />
       </div>
     );
   }

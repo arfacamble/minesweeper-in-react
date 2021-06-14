@@ -51,6 +51,6 @@ const addTypeToGrid = (grid) => {
 
 // console.log(determineTileType(exampleGrid[5], exampleGrid));
 
-console.log(addTypeToGrid(exampleGrid));
+// console.log(addTypeToGrid(exampleGrid));
 
 module.exports = { addTypeToGrid, surroundingIDs };

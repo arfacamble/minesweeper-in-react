@@ -2,18 +2,9 @@ import React, { Component } from 'react';
 
 import Cell from './cell';
 
-const gridStyle = {
-  display: 'grid',
-  border: 'solid 2px blue'
-};
-
 class Grid extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const { cells, col, row } = this.props;
+    const { cells, col, row, uncoverCell } = this.props;
     return (
       <div style={{
         display: 'grid',
@@ -21,7 +12,7 @@ class Grid extends Component {
         gridTemplateRows: `repeat(${row}, 30px)`
       }}
       >
-        {cells.map(cell => <Cell details={cell} key={cell.id} />)}
+        {cells.map(cell => <Cell details={cell} key={cell.id} uncoverCell={uncoverCell} />)}
       </div>
     );
   }

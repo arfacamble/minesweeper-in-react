@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
 class Cell extends Component {
-  constructor(props) {
-    super(props);
+  handleClick = (event) => {
+    console.log(event.type);
+    const { uncoverCell } = this.props;
+    uncoverCell(event.target.id);
   }
 
   render() {
@@ -14,6 +16,7 @@ class Cell extends Component {
           backgroundSize: 'cover'
         }}
         id={details.id}
+        onClick={this.handleClick}
       />
     );
   }
