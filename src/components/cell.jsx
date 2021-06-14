@@ -8,10 +8,12 @@ class Cell extends Component {
   render() {
     const { details } = this.props;
     return (
-      <div style={{
-        backgroundImage: `url(../../assets/${details.display})`,
-        backgroundSize: 'cover'
-      }}
+      <div
+        style={{
+          backgroundImage: `url(../../assets/${details.display})`,
+          backgroundSize: 'cover'
+        }}
+        id={details.id}
       />
     );
   }
