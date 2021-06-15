@@ -79,6 +79,10 @@ class App extends Component {
     };
   }
 
+  toggleFlag = (cellId) => {
+    console.log('hullo sir' + cellId);
+  }
+
   uncoverCell = (cellId) => {
     const { cells } = this.state;
     const cellToUncover = cells.find(cell => cell.id === cellId);
@@ -105,7 +109,7 @@ class App extends Component {
     const { col, row, cells } = this.state;
     return (
       <div>
-        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} />
+        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} toggleFlag={this.toggleFlag} />
       </div>
     );
   }

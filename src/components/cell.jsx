@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 
 class Cell extends Component {
   handleClick = (event) => {
-    console.log(event.type);
     const { uncoverCell } = this.props;
     uncoverCell(event.target.id);
+  }
+
+  handleRightClick = (e) => {
+    const { toggleFlag } = this.props;
+    toggleFlag(e.target.id);
+    // console.log(e.target.attributes.style.value.split('"')[1]);
   }
 
   render() {
@@ -17,6 +22,7 @@ class Cell extends Component {
         }}
         id={details.id}
         onClick={this.handleClick}
+        onContextMenu={this.handleRightClick}
       />
     );
   }
