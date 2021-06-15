@@ -80,14 +80,23 @@ class App extends Component {
   }
 
   toggleFlag = (cellId) => {
-    console.log('hullo sir' + cellId);
+    const { cells } = this.state;
+    const cellToUncover = cells.find(cell => cell.id === cellId);
+    const indexOfCell = cells.indexOf(cellToUncover);
+    if (cellToUncover.display === 'unopened.svg') {
+      cellToUncover.display = 'flag.svg';
+    } else if (cellToUncover.display === 'flag.svg') {
+      cellToUncover.display = 'unopened.svg';
+    }
+    cells.indexOfCell = cellToUncover;
+    this.setState({ cells });
   }
 
   uncoverCell = (cellId) => {
     const { cells } = this.state;
     const cellToUncover = cells.find(cell => cell.id === cellId);
     if (cellToUncover === undefined || cellToUncover.display !== 'unopened.svg') {
-      return null;
+      return;
     }
     const indexOfCell = cells.indexOf(cellToUncover);
     cellToUncover.display = cellToUncover.type;
