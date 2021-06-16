@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 class Cell extends Component {
   handleClick = (event) => {
-    const { uncoverCell } = this.props;
-    uncoverCell(event.target.id);
+    const { leftClicker } = this.props;
+    leftClicker(event.target.id);
   }
 
   handleRightClick = (e) => {

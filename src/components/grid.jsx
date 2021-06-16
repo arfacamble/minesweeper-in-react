@@ -4,7 +4,7 @@ import Cell from './cell';
 
 class Grid extends Component {
   render() {
-    const { cells, col, row, uncoverCell, flagToggler } = this.props;
+    const { cells, col, row, leftClicker, flagToggler } = this.props;
     return (
       <div style={{
         display: 'grid',
@@ -14,7 +14,7 @@ class Grid extends Component {
       >
         {cells.map(cell => <Cell details={cell}
                                  key={cell.id}
-                                 uncoverCell={uncoverCell}
+                                 leftClicker={leftClicker}
                                  flagToggler={flagToggler}
                            />
                   )

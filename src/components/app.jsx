@@ -92,6 +92,42 @@ class App extends Component {
     this.setState({ cells });
   }
 
+  uncoverCell = () => {
+    const { currentCell, currentCellIndex, cells } = this.state;
+    currentCell.display = currentCell.type;
+    cells.currentCellIndex = currentCell;
+    this.setState({ cells });
+  }
+
+  uncoverNeighbour = (cellId) => {
+    const { cells } = this.state;
+    const neighbourCell = cells.find(cell => cell.id === cellId);
+    if (neighbourCell === undefined || neighbourCell.display !== 'unopened.svg') { return; }
+    const neighbourCellIndex = cells.indexOf(neighbourCell);
+    neighbourCell.display = neighbourCell.type;
+    cells.neighbourCellIndex = neighbourCell;
+    this.setState({ cells });
+    if (neighbourCell.type === '0.svg') {
+      this.uncoverNeighbours(neighbourCell.id);
+    }
+  }
+
+  uncoverNeighbours = (cellId) => {
+    surroundingIDs(cellId).forEach(id => this.uncoverNeighbour(id));
+  }
+
+  cellUncoverer = () => {
+    const { currentCell } = this.state;
+    this.uncoverCell();
+    if (currentCell.mine) {
+      // this.endGame();
+      console.log('code endGame');
+    } else if (currentCell.type === '0.svg') {
+      this.uncoverNeighbours(currentCell.id);
+    }
+    console.log('testSuccess');
+  }
+
   setCurrentCellDetails = (cellId, nextStep) => {
     const { cells } = this.state;
     const currentCell = cells.find(cell => cell.id === cellId);
@@ -99,6 +135,8 @@ class App extends Component {
     this.setState({ currentCell, currentCellIndex }, () => {
       if (nextStep === 'toggleFlag') {
         this.toggleFlag();
+      } else if (nextStep === 'cellUncoverer') {
+        this.cellUncoverer();
       }
     });
   }
@@ -107,33 +145,21 @@ class App extends Component {
     this.setCurrentCellDetails(cellId, 'toggleFlag');
   }
 
-  uncoverCell = (cellId) => {
-    const { cells } = this.state;
-    const cellToUncover = cells.find(cell => cell.id === cellId);
-    if (cellToUncover === undefined || cellToUncover.display !== 'unopened.svg') {
-      return;
-    }
-    const indexOfCell = cells.indexOf(cellToUncover);
-    cellToUncover.display = cellToUncover.type;
-    cells.indexOfCell = cellToUncover;
-    this.setState({ cells });
-    if (cellToUncover.mine) {
-      const allRemainingMines = cells.filter(cell => cell.mine && cell.display === 'unopened.svg');
-      allRemainingMines.forEach(mine => this.uncoverCell(mine.id));
-      if (allRemainingMines.length === 0) { alert('FAIL'); }
-    } else if (cellToUncover.type === '0.svg') {
-      surroundingIDs(cellId).forEach(id => this.uncoverCell(id));
-    }
-    if (cells.every(cell => cell.mine || cell.display !== 'unopened.svg')) {
-      alert('SUCCESS');
-    }
+  leftClicker = (cellId) => {
+    this.setCurrentCellDetails(cellId, 'cellUncoverer');
   }
 
   render() {
     const { col, row, cells } = this.state;
     return (
       <div>
-        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} flagToggler={this.flagToggler} />
+        <Grid
+          col={col}
+          row={row}
+          cells={cells}
+          leftClicker={this.leftClicker}
+          flagToggler={this.flagToggler}
+        />
       </div>
     );
   }
