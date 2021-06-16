@@ -10,6 +10,8 @@ class App extends Component {
     this.state = {
       col: 8,
       row: 8,
+      currentCell: {},
+      currentCellIndex: 0,
       cells: [
         { id: '1-1', mine: false, type: '1.svg', display: 'unopened.svg' },
         { id: '1-2', mine: false, type: '1.svg', display: 'unopened.svg' },
@@ -79,46 +81,85 @@ class App extends Component {
     };
   }
 
-  toggleFlag = (cellId) => {
-    const { cells } = this.state;
-    const cellToUncover = cells.find(cell => cell.id === cellId);
-    const indexOfCell = cells.indexOf(cellToUncover);
-    if (cellToUncover.display === 'unopened.svg') {
-      cellToUncover.display = 'flag.svg';
-    } else if (cellToUncover.display === 'flag.svg') {
-      cellToUncover.display = 'unopened.svg';
+  toggleFlag = () => {
+    const { currentCell, currentCellIndex, cells } = this.state;
+    if (currentCell.display === 'unopened.svg') {
+      currentCell.display = 'flag.svg';
+    } else if (currentCell.display === 'flag.svg') {
+      currentCell.display = 'unopened.svg';
     }
-    cells.indexOfCell = cellToUncover;
+    cells.currentCellIndex = currentCell;
     this.setState({ cells });
   }
 
-  uncoverCell = (cellId) => {
-    const { cells } = this.state;
-    const cellToUncover = cells.find(cell => cell.id === cellId);
-    if (cellToUncover === undefined || cellToUncover.display !== 'unopened.svg') {
-      return;
-    }
-    const indexOfCell = cells.indexOf(cellToUncover);
-    cellToUncover.display = cellToUncover.type;
-    cells.indexOfCell = cellToUncover;
+  uncoverCell = () => {
+    const { currentCell, currentCellIndex, cells } = this.state;
+    currentCell.display = currentCell.type;
+    cells.currentCellIndex = currentCell;
     this.setState({ cells });
-    if (cellToUncover.mine) {
-      const allRemainingMines = cells.filter(cell => cell.mine && cell.display === 'unopened.svg');
-      allRemainingMines.forEach(mine => this.uncoverCell(mine.id));
-      if (allRemainingMines.length === 0) { alert('FAIL'); }
-    } else if (cellToUncover.type === '0.svg') {
-      surroundingIDs(cellId).forEach(id => this.uncoverCell(id));
+  }
+
+  uncoverNeighbour = (cellId) => {
+    const { cells } = this.state;
+    const neighbourCell = cells.find(cell => cell.id === cellId);
+    if (neighbourCell === undefined || neighbourCell.display !== 'unopened.svg') { return; }
+    const neighbourCellIndex = cells.indexOf(neighbourCell);
+    neighbourCell.display = neighbourCell.type;
+    cells.neighbourCellIndex = neighbourCell;
+    this.setState({ cells });
+    if (neighbourCell.type === '0.svg') {
+      this.uncoverNeighbours(neighbourCell.id);
     }
-    if (cells.every(cell => cell.mine || cell.display !== 'unopened.svg')) {
-      alert('SUCCESS');
+  }
+
+  uncoverNeighbours = (cellId) => {
+    surroundingIDs(cellId).forEach(id => this.uncoverNeighbour(id));
+  }
+
+  cellUncoverer = () => {
+    const { currentCell } = this.state;
+    this.uncoverCell();
+    if (currentCell.mine) {
+      // this.endGame();
+      console.log('code endGame');
+    } else if (currentCell.type === '0.svg') {
+      this.uncoverNeighbours(currentCell.id);
     }
+    console.log('testSuccess');
+  }
+
+  setCurrentCellDetails = (cellId, nextStep) => {
+    const { cells } = this.state;
+    const currentCell = cells.find(cell => cell.id === cellId);
+    const currentCellIndex = cells.indexOf(currentCell);
+    this.setState({ currentCell, currentCellIndex }, () => {
+      if (nextStep === 'toggleFlag') {
+        this.toggleFlag();
+      } else if (nextStep === 'cellUncoverer') {
+        this.cellUncoverer();
+      }
+    });
+  }
+
+  flagToggler = (cellId) => {
+    this.setCurrentCellDetails(cellId, 'toggleFlag');
+  }
+
+  leftClicker = (cellId) => {
+    this.setCurrentCellDetails(cellId, 'cellUncoverer');
   }
 
   render() {
     const { col, row, cells } = this.state;
     return (
       <div>
-        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} toggleFlag={this.toggleFlag} />
+        <Grid
+          col={col}
+          row={row}
+          cells={cells}
+          leftClicker={this.leftClicker}
+          flagToggler={this.flagToggler}
+        />
       </div>
     );
   }
