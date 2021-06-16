@@ -4,7 +4,7 @@ import Cell from './cell';
 
 class Grid extends Component {
   render() {
-    const { cells, col, row, leftClicker, flagToggler } = this.props;
+    const { cells, col, row, leftClicker, flagToggler, gameState } = this.props;
     return (
       <div style={{
         display: 'grid',
@@ -12,12 +12,13 @@ class Grid extends Component {
         gridTemplateRows: `repeat(${row}, 30px)`
       }}
       >
-        {cells.map(cell => <Cell details={cell}
-                                 key={cell.id}
-                                 leftClicker={leftClicker}
-                                 flagToggler={flagToggler}
-                           />
-                  )
+        {cells.map(cell => <Cell
+                            details={cell}
+                            key={cell.id}
+                            leftClicker={leftClicker}
+                            flagToggler={flagToggler}
+                            gameState={gameState}
+                           />)
         }
       </div>
     );

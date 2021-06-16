@@ -127,9 +127,18 @@ class App extends Component {
       }
       return cell;
     });
-    this.setState({ cells: updatedCells, gameState: 'failed' }, () => {
-      window.alert('YOU FAILED');
+    this.setState({ cells: updatedCells, gameState: 'fail' }, () => {
+      window.alert('YOU FAILED!!');
     });
+  }
+
+  testSuccess = () => {
+    const { cells } = this.state;
+    if (cells.every(cell => cell.mine || cell.display !== 'unopened.svg')) {
+      this.setState({ gameState: 'win' }, () => {
+        window.alert('YOU WIN!!');
+      });
+    }
   }
 
   cellUncoverer = () => {
@@ -140,7 +149,7 @@ class App extends Component {
     } else if (currentCell.type === '0.svg') {
       this.uncoverNeighbours(currentCell.id);
     }
-    console.log('testSuccess');
+    this.testSuccess();
   }
 
   setCurrentCellDetails = (cellId, nextStep) => {
