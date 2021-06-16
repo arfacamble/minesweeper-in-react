@@ -8,8 +8,8 @@ class Cell extends Component {
 
   handleRightClick = (e) => {
     e.preventDefault();
-    const { toggleFlag } = this.props;
-    toggleFlag(e.target.id);
+    const { flagToggler } = this.props;
+    flagToggler(e.target.id);
     // console.log(e.target.attributes.style.value.split('"')[1]);
   }
 

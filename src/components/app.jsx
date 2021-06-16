@@ -10,6 +10,8 @@ class App extends Component {
     this.state = {
       col: 8,
       row: 8,
+      currentCell: {},
+      currentCellIndex: 0,
       cells: [
         { id: '1-1', mine: false, type: '1.svg', display: 'unopened.svg' },
         { id: '1-2', mine: false, type: '1.svg', display: 'unopened.svg' },
@@ -79,17 +81,30 @@ class App extends Component {
     };
   }
 
-  toggleFlag = (cellId) => {
-    const { cells } = this.state;
-    const cellToUncover = cells.find(cell => cell.id === cellId);
-    const indexOfCell = cells.indexOf(cellToUncover);
-    if (cellToUncover.display === 'unopened.svg') {
-      cellToUncover.display = 'flag.svg';
-    } else if (cellToUncover.display === 'flag.svg') {
-      cellToUncover.display = 'unopened.svg';
+  toggleFlag = () => {
+    const { currentCell, currentCellIndex, cells } = this.state;
+    if (currentCell.display === 'unopened.svg') {
+      currentCell.display = 'flag.svg';
+    } else if (currentCell.display === 'flag.svg') {
+      currentCell.display = 'unopened.svg';
     }
-    cells.indexOfCell = cellToUncover;
+    cells.currentCellIndex = currentCell;
     this.setState({ cells });
+  }
+
+  setCurrentCellDetails = (cellId, nextStep) => {
+    const { cells } = this.state;
+    const currentCell = cells.find(cell => cell.id === cellId);
+    const currentCellIndex = cells.indexOf(currentCell);
+    this.setState({ currentCell, currentCellIndex }, () => {
+      if (nextStep === 'toggleFlag') {
+        this.toggleFlag();
+      }
+    });
+  }
+
+  flagToggler = (cellId) => {
+    this.setCurrentCellDetails(cellId, 'toggleFlag');
   }
 
   uncoverCell = (cellId) => {
@@ -118,7 +133,7 @@ class App extends Component {
     const { col, row, cells } = this.state;
     return (
       <div>
-        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} toggleFlag={this.toggleFlag} />
+        <Grid col={col} row={row} cells={cells} uncoverCell={this.uncoverCell} flagToggler={this.flagToggler} />
       </div>
     );
   }
