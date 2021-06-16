@@ -12,6 +12,7 @@ class App extends Component {
       row: 8,
       currentCell: {},
       currentCellIndex: 0,
+      gameState: 'running',
       cells: [
         { id: '1-1', mine: false, type: '1.svg', display: 'unopened.svg' },
         { id: '1-2', mine: false, type: '1.svg', display: 'unopened.svg' },
@@ -116,12 +117,26 @@ class App extends Component {
     surroundingIDs(cellId).forEach(id => this.uncoverNeighbour(id));
   }
 
+  failGame = () => {
+    const { cells } = this.state;
+    const updatedCells = cells.map((cell) => {
+      if (cell.mine) {
+        const exploded = cell;
+        exploded.display = '*.png';
+        return exploded;
+      }
+      return cell;
+    });
+    this.setState({ cells: updatedCells, gameState: 'failed' }, () => {
+      window.alert('YOU FAILED');
+    });
+  }
+
   cellUncoverer = () => {
     const { currentCell } = this.state;
     this.uncoverCell();
     if (currentCell.mine) {
-      // this.endGame();
-      console.log('code endGame');
+      this.failGame();
     } else if (currentCell.type === '0.svg') {
       this.uncoverNeighbours(currentCell.id);
     }
@@ -150,13 +165,14 @@ class App extends Component {
   }
 
   render() {
-    const { col, row, cells } = this.state;
+    const { col, row, cells, gameState } = this.state;
     return (
       <div>
         <Grid
           col={col}
           row={row}
           cells={cells}
+          gameState={gameState}
           leftClicker={this.leftClicker}
           flagToggler={this.flagToggler}
         />
