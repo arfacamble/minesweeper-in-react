@@ -8,8 +8,8 @@ class Grid extends Component {
     return (
       <div style={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${col}, 30px)`,
-        gridTemplateRows: `repeat(${row}, 30px)`
+        gridTemplateColumns: `repeat(${col}, 25px)`,
+        gridTemplateRows: `repeat(${row}, 25px)`
       }}
       >
         {cells.map(cell => <Cell
