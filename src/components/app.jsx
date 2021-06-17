@@ -190,7 +190,6 @@ class App extends Component {
   }
 
   incrementClock = () => {
-    console.log('working');
     const { secondsElapsed } = this.state;
     this.setState({ secondsElapsed: secondsElapsed + 1 });
   }
