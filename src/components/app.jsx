@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 
 import Grid from './grid';
 import Clock from './clock';
-import { surroundingIDs } from '../logic/add-type-to-grid';
+import DifficultyButton from './difficulty-button';
+import { gridBuild } from '../logic/grid-build';
+import { surroundingIDs, addTypeToGrid } from '../logic/add-type-to-grid';
 
 class App extends Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class App extends Component {
       currentCellIndex: 0,
       gameState: 'pending',
       secondsElapsed: 0,
+      currentDifficulty: 'Intermediate',
       cells: [
         { id: '1-1', mine: false, type: '1.svg', display: 'unopened.svg' },
         { id: '1-2', mine: false, type: '1.svg', display: 'unopened.svg' },
@@ -200,8 +203,37 @@ class App extends Component {
     clearInterval(this.timer);
   }
 
+  setCellsState = (newCells) => {
+    newCells = addTypeToGrid(newCells);
+    this.setState({ cells: newCells, gameState: 'pending' });
+  }
+
+  newGame = (difficulty) => {
+    this.setState({ currentDifficulty: difficulty }, () => {
+      // beginner: 8x8 10mines, intermediate: 16x16 40 mines, expert: 16x30 99 mines
+      let newCells = [];
+      if (difficulty === 'Beginner') {
+        newCells = gridBuild(8, 8, 10);
+        this.setState({ col: 8, row: 8 }, () => {
+          this.setCellsState(newCells);
+        });
+      } else if (difficulty === 'Intermediate') {
+        newCells = gridBuild(16, 16, 40);
+        this.setState({ col: 16, row: 16 }, () => {
+          this.setCellsState(newCells);
+        });
+      } else if (difficulty === 'Expert') {
+        newCells = gridBuild(16, 30, 99);
+        this.setState({ col: 30, row: 16 }, () => {
+          this.setCellsState(newCells);
+        });
+      }
+    });
+  }
+
   render() {
     const { col, row, cells, gameState, secondsElapsed } = this.state;
+    const levels = ['Beginner', 'Intermediate', 'Expert'];
     return (
       <div
         style={{
@@ -219,7 +251,10 @@ class App extends Component {
           leftClicker={this.leftClicker}
           flagToggler={this.flagToggler}
         />
-        <Clock secondsElapsed={secondsElapsed} />
+        <div className="control-panel">
+          {levels.map(level => <DifficultyButton difficulty={level} key={level} newGame={this.newGame} />)}
+          <Clock secondsElapsed={secondsElapsed} />
+        </div>
       </div>
     );
   }

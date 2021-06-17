@@ -26,13 +26,13 @@ const isTileMine = (id, grid) => {
 
 const determineTileType = (tile, grid) => {
   if (tile.mine) {
-    tile.type = '*';
+    tile.type = '*.png';
   } else {
     const surroundingTileIds = surroundingIDs(tile.id);
     const minesSurrounding = surroundingTileIds.map(id => isTileMine(id, grid));
-    tile.type = minesSurrounding.filter(val => val).length
+    tile.type = `${minesSurrounding.filter(val => val).length}.svg`;
   }
-  tile.display = 'unopened';
+  tile.display = 'unopened.svg';
   return tile;
 };
 
