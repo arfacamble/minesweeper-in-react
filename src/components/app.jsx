@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 
 import Grid from './grid';
+import Clock from './clock';
 import { surroundingIDs } from '../logic/add-type-to-grid';
 
 class App extends Component {
   constructor(props) {
     super(props);
-
+    this.timer = 0;
     this.state = {
       col: 8,
       row: 8,
       currentCell: {},
       currentCellIndex: 0,
-      gameState: 'running',
+      gameState: 'pending',
+      secondsElapsed: 0,
       cells: [
         { id: '1-1', mine: false, type: '1.svg', display: 'unopened.svg' },
         { id: '1-2', mine: false, type: '1.svg', display: 'unopened.svg' },
@@ -170,13 +172,44 @@ class App extends Component {
   }
 
   leftClicker = (cellId) => {
+    const { gameState } = this.state;
+    if (gameState === 'pending') {
+      this.setState({ gameState: 'running' }, () => {
+        this.startClock();
+      });
+    }
     this.setCurrentCellDetails(cellId, 'cellUncoverer');
   }
 
+  resetClock = () => {
+    this.setState({ secondsElapsed: 0 });
+  }
+
+  startClock = () => {
+    this.timer = setInterval(this.incrementClock(), 1000);
+  }
+
+  incrementClock = () => {
+    console.log('working');
+    const { secondsElapsed } = this.state;
+    this.setState({ secondsElapsed: secondsElapsed + 1 });
+  }
+
+  stopClock = () => {
+    clearInterval(this.timer);
+  }
+
   render() {
-    const { col, row, cells, gameState } = this.state;
+    const { col, row, cells, gameState, secondsElapsed } = this.state;
     return (
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '50%'
+        }}
+      >
         <Grid
           col={col}
           row={row}
@@ -185,6 +218,7 @@ class App extends Component {
           leftClicker={this.leftClicker}
           flagToggler={this.flagToggler}
         />
+        <Clock secondsElapsed={secondsElapsed} />
       </div>
     );
   }
