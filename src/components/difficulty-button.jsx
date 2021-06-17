@@ -7,13 +7,13 @@ class DifficultyButton extends Component {
   }
 
   render() {
-    const { difficulty } = this.props;
+    const { label } = this.props;
     return (
       <button
         className="difficulty-button"
         onClick={this.handleClick}
       >
-        {difficulty}
+        {label}
       </button>
     );
   }

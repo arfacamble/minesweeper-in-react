@@ -17,7 +17,7 @@ class App extends Component {
       currentCellIndex: 0,
       gameState: 'pending',
       secondsElapsed: 0,
-      currentDifficulty: 'Intermediate',
+      currentDifficulty: 'Beginner',
       cells: [
         { id: '1-1', mine: false, type: '1.svg', display: 'unopened.svg' },
         { id: '1-2', mine: false, type: '1.svg', display: 'unopened.svg' },
@@ -209,6 +209,8 @@ class App extends Component {
   }
 
   newGame = (difficulty) => {
+    this.stopClock();
+    this.resetClock();
     this.setState({ currentDifficulty: difficulty }, () => {
       // beginner: 8x8 10mines, intermediate: 16x16 40 mines, expert: 16x30 99 mines
       let newCells = [];
@@ -232,7 +234,7 @@ class App extends Component {
   }
 
   render() {
-    const { col, row, cells, gameState, secondsElapsed } = this.state;
+    const { col, row, cells, gameState, secondsElapsed, currentDifficulty } = this.state;
     const levels = ['Beginner', 'Intermediate', 'Expert'];
     return (
       <div
@@ -252,7 +254,14 @@ class App extends Component {
           flagToggler={this.flagToggler}
         />
         <div className="control-panel">
-          {levels.map(level => <DifficultyButton difficulty={level} key={level} newGame={this.newGame} />)}
+          <DifficultyButton difficulty={currentDifficulty} label="Restart" key="Restart" newGame={this.newGame} />
+          {levels.map(level => <DifficultyButton
+                                difficulty={level}
+                                label={level}
+                                key={level}
+                                newGame={this.newGame}
+                               />
+          )}
           <Clock secondsElapsed={secondsElapsed} />
         </div>
       </div>
