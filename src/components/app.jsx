@@ -130,6 +130,7 @@ class App extends Component {
       return cell;
     });
     this.setState({ cells: updatedCells, gameState: 'fail' }, () => {
+      this.stopClock();
       window.alert('YOU FAILED!!');
     });
   }
@@ -138,6 +139,7 @@ class App extends Component {
     const { cells } = this.state;
     if (cells.every(cell => cell.mine || cell.display !== 'unopened.svg')) {
       this.setState({ gameState: 'win' }, () => {
+        this.stopClock();
         window.alert('YOU WIN!!');
       });
     }
