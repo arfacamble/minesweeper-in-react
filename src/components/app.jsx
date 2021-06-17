@@ -186,7 +186,7 @@ class App extends Component {
   }
 
   startClock = () => {
-    this.timer = setInterval(this.incrementClock(), 1000);
+    this.timer = setInterval(() => { this.incrementClock(); }, 1000);
   }
 
   incrementClock = () => {
