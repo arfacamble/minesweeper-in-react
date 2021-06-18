@@ -22,7 +22,7 @@ class Cell extends Component {
     return (
       <div
         style={{
-          backgroundImage: `url(../../assets/images/${details.display})`,
+          backgroundImage: `url(/assets/images/${details.display})`,
           backgroundSize: 'cover'
         }}
         id={details.id}
