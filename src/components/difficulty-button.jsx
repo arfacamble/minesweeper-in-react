@@ -12,6 +12,10 @@ class DifficultyButton extends Component {
       <button
         className="difficulty-button"
         onClick={this.handleClick}
+        style={{
+          borderRadius: '0',
+          marginRight: '8px'
+        }}
       >
         {label}
       </button>
