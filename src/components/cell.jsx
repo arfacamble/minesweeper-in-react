@@ -22,7 +22,7 @@ class Cell extends Component {
     return (
       <div
         style={{
-          backgroundImage: `url(assets/images/${details.display})`,
+          backgroundImage: `url('https://raw.githubusercontent.com/arfacamble/minesweeper-in-react/619af2697ddc28c8e2b7bb6fb35932ba668ae16c/assets/images/${details.display}')`,
           backgroundSize: 'cover'
         }}
         id={details.id}
