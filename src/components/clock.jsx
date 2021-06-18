@@ -8,7 +8,7 @@ class Clock extends Component {
         <h3
           style={{margin: 0}}
         >
-          Time: {secondsElapsed}
+          Time: <span style={{ fontFamily: "digital-7_monomono" }}>{secondsElapsed}</span>
         </h3>
       </div>
     );
