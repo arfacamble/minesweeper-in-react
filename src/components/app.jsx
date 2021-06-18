@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Grid from './grid';
 import Clock from './clock';
 import DifficultyButton from './difficulty-button';
+import GameStateMessage from './game-state-message';
 import { gridBuild } from '../logic/grid-build';
 import { surroundingIDs, addTypeToGrid } from '../logic/add-type-to-grid';
 
@@ -132,18 +133,16 @@ class App extends Component {
       }
       return cell;
     });
-    this.setState({ cells: updatedCells, gameState: 'fail' }, () => {
+    this.setState({ cells: updatedCells, gameState: 'failure' }, () => {
       this.stopClock();
-      window.alert('YOU FAILED!!');
     });
   }
 
   testSuccess = () => {
     const { cells } = this.state;
     if (cells.every(cell => cell.mine || cell.display !== 'unopened.svg')) {
-      this.setState({ gameState: 'win' }, () => {
+      this.setState({ gameState: 'success' }, () => {
         this.stopClock();
-        window.alert('YOU WIN!!');
       });
     }
   }
@@ -239,21 +238,17 @@ class App extends Component {
     return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          width: '50%'
+          maxWidth: '50%'
         }}
       >
-        <Grid
-          col={col}
-          row={row}
-          cells={cells}
-          gameState={gameState}
-          leftClicker={this.leftClicker}
-          flagToggler={this.flagToggler}
-        />
-        <div className="control-panel">
+        <div
+          className="control-panel"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+          }}
+        >
           <DifficultyButton difficulty={currentDifficulty} label="Restart" key="Restart" newGame={this.newGame} />
           {levels.map(level => <DifficultyButton
                                 difficulty={level}
@@ -263,6 +258,34 @@ class App extends Component {
                                />
           )}
           <Clock secondsElapsed={secondsElapsed} />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '16px'
+          }}
+        >
+          <div
+            style={{
+              borderTop: "2px solid #fff",
+              borderLeft: "2px solid #fff",
+              borderBottom: "2px solid #7B7B7B",
+              borderRight: "2px solid #7B7B7B"
+            }}
+          >
+            <Grid
+              col={col}
+              row={row}
+              cells={cells}
+              gameState={gameState}
+              leftClicker={this.leftClicker}
+              flagToggler={this.flagToggler}
+            />
+          </div>
+          <GameStateMessage gameState={gameState} />
         </div>
       </div>
     );

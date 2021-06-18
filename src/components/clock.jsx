@@ -5,7 +5,11 @@ class Clock extends Component {
     const { secondsElapsed } = this.props;
     return (
       <div className="clockContainer">
-        <h3>{secondsElapsed}</h3>
+        <h3
+          style={{margin: 0}}
+        >
+          Time: {secondsElapsed}
+        </h3>
       </div>
     );
   }
