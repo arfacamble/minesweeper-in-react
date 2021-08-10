@@ -10,6 +10,7 @@ class DifficultyButton extends Component {
     const { label } = this.props;
     return (
       <button
+        type="button"
         className="difficulty-button"
         onClick={this.handleClick}
         style={{
